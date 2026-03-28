@@ -1,0 +1,174 @@
+:root {
+  --bg-top: #9bbc0f;
+  --bg-bottom: #3b5d3b;
+  --panel: #132a13;
+  --panel-soft: #31572c;
+  --screen: #dbe88d;
+  --ink: #081c15;
+  --accent: #efc84a;
+  --danger: #bc4749;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top, rgba(239, 200, 74, 0.22), transparent 30%),
+    linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
+  color: var(--ink);
+  font-family: "Press Start 2P", monospace;
+}
+
+body {
+  min-height: 100vh;
+}
+
+.shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 16px;
+  padding: 18px 14px calc(18px + env(safe-area-inset-bottom));
+}
+
+.frame {
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
+  background: rgba(19, 42, 19, 0.92);
+  border: 6px solid #081c15;
+  border-radius: 20px;
+  padding: 14px;
+  box-shadow:
+    0 20px 50px rgba(8, 28, 21, 0.35),
+    inset 0 0 0 3px rgba(155, 188, 15, 0.2);
+}
+
+.hud,
+.legend {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.hud {
+  margin-bottom: 12px;
+}
+
+.hud div,
+.legend span {
+  background: rgba(219, 232, 141, 0.9);
+  border: 3px solid rgba(8, 28, 21, 0.9);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.label {
+  display: block;
+  font-size: 10px;
+  opacity: 0.7;
+  margin-bottom: 8px;
+}
+
+strong {
+  font-size: 12px;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  background: var(--screen);
+  border: 4px solid #081c15;
+  border-radius: 14px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.legend {
+  margin-top: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.legend span {
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.touch-ui {
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+}
+
+.touch-btn {
+  appearance: none;
+  border: 4px solid #081c15;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, #efc84a 0%, #d68c45 100%);
+  color: #081c15;
+  min-height: 76px;
+  font: inherit;
+  font-size: 22px;
+  box-shadow: 0 8px 0 rgba(8, 28, 21, 0.65);
+}
+
+.touch-btn:active,
+.touch-btn.is-active {
+  transform: translateY(6px);
+  box-shadow: 0 2px 0 rgba(8, 28, 21, 0.65);
+}
+
+.touch-jump {
+  background: linear-gradient(180deg, #f28482 0%, #bc4749 100%);
+}
+
+@media (min-width: 901px) {
+  .touch-ui {
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 900px) {
+  .hud,
+  .legend {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .frame {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 520px) {
+  .shell {
+    padding: 10px 10px calc(12px + env(safe-area-inset-bottom));
+    gap: 10px;
+  }
+
+  .hud div,
+  .legend span {
+    padding: 8px;
+  }
+
+  .label,
+  .legend span,
+  strong {
+    font-size: 9px;
+  }
+
+  .touch-btn {
+    min-height: 68px;
+    font-size: 20px;
+  }
+}
