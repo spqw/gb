@@ -101,6 +101,15 @@ canvas {
   line-height: 1.5;
 }
 
+.legend-links a {
+  color: inherit;
+}
+
+.legend-links a:hover,
+.legend-links a:focus-visible {
+  color: var(--danger);
+}
+
 .touch-ui {
   max-width: 1080px;
   width: 100%;

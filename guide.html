@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>GB Studio Mario-Inspired Platformer Guide</title>
+    <style>
+      :root {
+        --paper: #f6f2e8;
+        --ink: #1d1f1a;
+        --muted: #4a5145;
+        --accent: #215732;
+        --accent-soft: #dce9d7;
+        --line: #c8c0b0;
+        --warning: #734100;
+        --warning-soft: #ffefcf;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: #dad4c7;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at top, rgba(255, 255, 255, 0.75), transparent 32rem),
+          linear-gradient(180deg, #ece5d8 0%, #dad4c7 100%);
+        font:
+          16px/1.55 Georgia,
+          "Times New Roman",
+          serif;
+      }
+
+      main {
+        width: min(960px, calc(100vw - 32px));
+        margin: 32px auto;
+        padding: 40px 44px 56px;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        box-shadow: 0 20px 60px rgba(40, 34, 20, 0.15);
+      }
+
+      h1,
+      h2,
+      h3 {
+        line-height: 1.15;
+        margin: 0 0 12px;
+        font-family: "Trebuchet MS", Helvetica, Arial, sans-serif;
+      }
+
+      h1 {
+        font-size: 2.4rem;
+        letter-spacing: -0.03em;
+      }
+
+      h2 {
+        margin-top: 34px;
+        padding-top: 18px;
+        border-top: 1px solid var(--line);
+        font-size: 1.45rem;
+      }
+
+      h3 {
+        margin-top: 22px;
+        font-size: 1.05rem;
+      }
+
+      p,
+      ul,
+      ol,
+      table {
+        margin: 0 0 14px;
+      }
+
+      ul,
+      ol {
+        padding-left: 22px;
+      }
+
+      li {
+        margin-bottom: 7px;
+      }
+
+      .eyebrow {
+        margin-bottom: 10px;
+        color: var(--accent);
+        font:
+          700 0.8rem/1.1 "Trebuchet MS",
+          Helvetica,
+          Arial,
+          sans-serif;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .lede {
+        font-size: 1.08rem;
+        color: var(--muted);
+      }
+
+      .callout,
+      .warning {
+        padding: 14px 16px;
+        margin: 18px 0;
+        border-left: 5px solid var(--accent);
+        background: var(--accent-soft);
+      }
+
+      .warning {
+        border-left-color: var(--warning);
+        background: var(--warning-soft);
+      }
+
+      code {
+        padding: 1px 5px;
+        background: rgba(33, 87, 50, 0.08);
+        border-radius: 4px;
+        font-size: 0.92em;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 9px 10px;
+        vertical-align: top;
+        border: 1px solid var(--line);
+        text-align: left;
+      }
+
+      th {
+        background: rgba(33, 87, 50, 0.08);
+        font-family: "Trebuchet MS", Helvetica, Arial, sans-serif;
+      }
+
+      .meta {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin: 22px 0 28px;
+      }
+
+      .meta-card {
+        padding: 12px 14px;
+        background: #fffdf8;
+        border: 1px solid var(--line);
+      }
+
+      .meta-card strong {
+        display: block;
+        margin-bottom: 4px;
+        font-family: "Trebuchet MS", Helvetica, Arial, sans-serif;
+      }
+
+      .footer {
+        margin-top: 34px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.94rem;
+      }
+
+      .no-print {
+        margin-top: 18px;
+      }
+
+      .no-print a {
+        color: var(--accent);
+      }
+
+      @media (max-width: 760px) {
+        main {
+          width: calc(100vw - 18px);
+          margin: 9px auto;
+          padding: 24px 18px 36px;
+        }
+
+        .meta {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media print {
+        html,
+        body {
+          background: #fff;
+        }
+
+        main {
+          width: 100%;
+          margin: 0;
+          padding: 0;
+          border: 0;
+          box-shadow: none;
+        }
+
+        .no-print {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">GB Studio Guide</p>
+      <h1>How to Build a Super Mario-Inspired Game in GB Studio and Serve It on gb.spqw.net</h1>
+      <p class="lede">
+        This guide is for making a side-scrolling, jump-driven Game Boy platformer that captures
+        the feel of early Mario games without copying Nintendo art, names, characters, music, or
+        level layouts. It covers design constraints, asset prep, scene setup, event logic, level
+        structure, performance limits, web export, and the simplest deployment shape for
+        <code>gb.spqw.net</code>.
+      </p>
+
+      <div class="meta">
+        <section class="meta-card">
+          <strong>Target</strong>
+          GB Studio web-exported platformer with Game Boy constraints intact.
+        </section>
+        <section class="meta-card">
+          <strong>Best Fit</strong>
+          A compact 2D platformer with clear jump arcs, enemy timing, checkpoints, and short
+          levels.
+        </section>
+        <section class="meta-card">
+          <strong>Avoid</strong>
+          Direct Nintendo IP reuse, oversized scenes, too many animated sprites, and single-scene
+          mega-levels.
+        </section>
+      </div>
+
+      <div class="warning">
+        <strong>Legal line:</strong> copy structure, pacing, verbs, and readability, not protected
+        expression. Make your own hero, enemy designs, tiles, music, world map, item names, and
+        UI framing.
+      </div>
+
+      <h2>1. What GB Studio Is Good At</h2>
+      <p>
+        GB Studio is strongest when you design around Game Boy rules instead of fighting them. A
+        Mario-inspired game works best if you keep movement readable, level chunks compact, enemy
+        patterns simple, and collectible logic event-driven rather than physics-heavy.
+      </p>
+      <ul>
+        <li>Use short, handcrafted stages split into multiple scenes.</li>
+        <li>Build a small move set: run, jump, stomp, collect, checkpoint, exit.</li>
+        <li>Design with clean silhouettes and repeated tiles.</li>
+        <li>Prefer tight set-pieces over sprawling exploratory maps.</li>
+      </ul>
+
+      <h2>2. Current Technical Constraints You Need to Design Around</h2>
+      <p>
+        The official GB Studio docs remain the source of truth for hard limits. The most important
+        ones for a platformer are these:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Area</th>
+            <th>Constraint</th>
+            <th>Why it matters for a Mario-like game</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Backgrounds</td>
+            <td>
+              PNGs in <code>assets/backgrounds</code>, 4-color palette, dimensions in multiples of
+              <code>8px</code>, minimum <code>160x144</code>, maximum width/height
+              <code>2040px</code>, max <code>192</code> unique <code>8x8</code> tiles.
+            </td>
+            <td>
+              Your terrain kit must be modular. Ground, pipes, bricks, clouds, and slopes need heavy
+              tile reuse.
+            </td>
+          </tr>
+          <tr>
+            <td>Sprites</td>
+            <td>
+              PNGs in <code>assets/sprites</code>, 4-color sprite palette, frames are
+              <code>16x16</code> arranged horizontally. Animated actors commonly use
+              <code>96x16</code> sheets.
+            </td>
+            <td>
+              Every extra enemy animation costs budget. Keep enemies simple and reuse shared frames.
+            </td>
+          </tr>
+          <tr>
+            <td>Web export</td>
+            <td>
+              <code>Export Web</code> builds to <code>$PROJECT_ROOT/build/web</code> with
+              touch controls on mobile.
+            </td>
+            <td>
+              Deployment is just static hosting. No backend is required unless you add analytics or
+              scoreboards.
+            </td>
+          </tr>
+          <tr>
+            <td>Custom events</td>
+            <td>
+              Reusable event procedures can take variables and actor inputs.
+            </td>
+            <td>
+              Use them for stomps, hit reactions, coin pickup, checkpoints, and scene transitions so
+              stage scripts stay maintainable.
+            </td>
+          </tr>
+          <tr>
+            <td>Engine eject</td>
+            <td>
+              You can eject engine code if you are comfortable editing GBDK source.
+            </td>
+            <td>
+              Treat this as optional. Most platformer work should stay inside normal GB Studio unless
+              you need deeper engine changes.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>3. The Recommended Project Shape</h2>
+      <p>Start with one world, three stages, and one repeatable gameplay loop.</p>
+      <ol>
+        <li>Stage 1 teaches movement, jump timing, and basic enemy avoidance.</li>
+        <li>Stage 2 introduces moving risk: pits, narrow jumps, faster enemies.</li>
+        <li>Stage 3 tests mastery and ends with a clear goal actor or exit trigger.</li>
+      </ol>
+      <p>Keep your first version small. A tight vertical slice is better than a half-finished world map.</p>
+
+      <h3>Core systems to implement first</h3>
+      <ul>
+        <li>Player spawn and respawn.</li>
+        <li>Horizontal movement and tuned jump feel.</li>
+        <li>Enemy patrol and player damage.</li>
+        <li>Stomp detection or alternate attack rule.</li>
+        <li>Coins or cores as collectibles.</li>
+        <li>Checkpoint flag.</li>
+        <li>Goal pole, door, or beacon exit.</li>
+      </ul>
+
+      <h2>4. Make It Mario-Inspired Without Copying Mario</h2>
+      <p>
+        The safest way to reference Mario is through design grammar, not direct imitation. Think in
+        terms of verbs and cadence.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Use</th>
+            <th>Avoid</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Momentum-based jumps, readable enemy pacing, secret rewards, block chains.</td>
+            <td>Mario, Luigi, Goombas, Koopas, pipes, mushrooms, coins, or level copies.</td>
+          </tr>
+          <tr>
+            <td>Original brick, stone, grass, machine, cloud, or cave themes.</td>
+            <td>1-1 remakes, castle clones, or direct palette-swapped Nintendo tiles.</td>
+          </tr>
+          <tr>
+            <td>Custom mascot, custom item economy, custom UI language.</td>
+            <td>Question blocks, Fire Flower analogs, star clones, or ripped SFX/music.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>5. Asset Pipeline</h2>
+      <h3>Background art</h3>
+      <ul>
+        <li>Draw on an <code>8x8</code> grid from the beginning.</li>
+        <li>Build a tile kit first: ground edge, fill, ladder, hazard, platform, decor, exit.</li>
+        <li>Audit unique tiles early so you stay well under the <code>192</code>-tile ceiling.</li>
+        <li>Use repeated motifs for clouds, hills, and underground walls.</li>
+      </ul>
+
+      <h3>Sprites</h3>
+      <ul>
+        <li>Player: start with a <code>96x16</code> animated actor sheet.</li>
+        <li>Enemy A: one walker with 2-frame animation.</li>
+        <li>Enemy B: one hopper or stationary hazard.</li>
+        <li>Pickup: static <code>16x16</code> sprite if possible.</li>
+      </ul>
+
+      <h3>UI</h3>
+      <ul>
+        <li>Customize <code>assets/ui/ascii.png</code> for your score and dialog font.</li>
+        <li>Customize <code>assets/ui/frame.png</code> for menus and checkpoint messages.</li>
+        <li>Keep text short; platformers should not stall the player often.</li>
+      </ul>
+
+      <h2>6. Scene Construction for Platformers</h2>
+      <p>
+        Treat each GB Studio scene as one gameplay chunk. If a level is long, split it into scenes
+        connected by edge transitions, doors, or checkpoint warps.
+      </p>
+      <ul>
+        <li>Use scene 1 for the intro chunk and teaching space.</li>
+        <li>Use scene 2 for the middle challenge and checkpoint.</li>
+        <li>Use scene 3 for the final run and exit.</li>
+      </ul>
+      <p>
+        This reduces script complexity, lowers per-scene asset pressure, and keeps collision editing
+        manageable.
+      </p>
+
+      <h3>Collision approach</h3>
+      <ul>
+        <li>Mark solid floors and walls first.</li>
+        <li>Leave decorative background tiles non-solid.</li>
+        <li>Use separate visual language for hazards like spikes, acid, void, or crushers.</li>
+        <li>Test jump clearance constantly. One-tile mistakes feel much worse in GB-scale games.</li>
+      </ul>
+
+      <h2>7. Event Logic You Will Actually Need</h2>
+      <p>
+        A good GB Studio platformer stays understandable by making most logic reusable. Build these
+        as Custom Events early.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Custom Event</th>
+            <th>Purpose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>CollectPickup</code></td>
+            <td>Increment score or currency, play SFX, hide actor, mark collected.</td>
+          </tr>
+          <tr>
+            <td><code>DamagePlayer</code></td>
+            <td>Reduce health or lives, apply knockback or respawn, trigger invulnerability window.</td>
+          </tr>
+          <tr>
+            <td><code>SetCheckpoint</code></td>
+            <td>Store current scene and spawn position in variables.</td>
+          </tr>
+          <tr>
+            <td><code>RespawnPlayer</code></td>
+            <td>Move player to checkpoint, reset temporary state.</td>
+          </tr>
+          <tr>
+            <td><code>DefeatEnemy</code></td>
+            <td>Play stomp or hit sequence, award points, hide enemy.</td>
+          </tr>
+          <tr>
+            <td><code>FinishStage</code></td>
+            <td>Lock controls, play fanfare, move to score screen or next stage.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Variables to define on day one</h3>
+      <ul>
+        <li><code>v_lives</code></li>
+        <li><code>v_score</code></li>
+        <li><code>v_pickups</code></li>
+        <li><code>v_checkpoint_scene</code></li>
+        <li><code>v_checkpoint_x</code></li>
+        <li><code>v_checkpoint_y</code></li>
+        <li><code>v_stage_unlocked</code></li>
+      </ul>
+
+      <h2>8. Enemy Design That Fits GB Studio</h2>
+      <p>Do not start with ten enemy types. Start with three behaviors.</p>
+      <ol>
+        <li>Walker: patrol left and right, reverse on wall or ledge trigger.</li>
+        <li>Hopper: idle, jump, land, repeat.</li>
+        <li>Hazard: static spike, fire bar substitute, crusher, or projectile lane.</li>
+      </ol>
+      <p>
+        These three patterns are enough to build many levels if you vary spacing, platforms, and
+        timing windows.
+      </p>
+
+      <h2>9. Movement Feel Checklist</h2>
+      <p>
+        A Mario-inspired game lives or dies on feel. In GB Studio, that means repeated playtesting
+        more than elaborate scripting.
+      </p>
+      <ul>
+        <li>Jump arc should clear your standard two-tile obstacle reliably.</li>
+        <li>Short taps and full jumps should feel distinct if your control scheme allows it.</li>
+        <li>Landing should not slide unpredictably.</li>
+        <li>Enemy contact should be readable and fair.</li>
+        <li>Camera shifts between scenes should not disorient the player.</li>
+      </ul>
+
+      <div class="callout">
+        If the game does not feel good with one flat test room, do not add more content. Fix the
+        base movement first.
+      </div>
+
+      <h2>10. Content Order for the First Milestone</h2>
+      <ol>
+        <li>Build a graybox test scene with placeholder tiles.</li>
+        <li>Tune movement and camera behavior.</li>
+        <li>Add one pickup and one enemy.</li>
+        <li>Add death and respawn.</li>
+        <li>Add checkpoint.</li>
+        <li>Add level exit.</li>
+        <li>Only then replace placeholders with final art.</li>
+      </ol>
+
+      <h2>11. Audio</h2>
+      <p>
+        Use short jump, pickup, damage, and finish sounds. Keep music loops concise and readable.
+        If you only have time for one music track, make a strong world-1 theme and vary the stage
+        geometry around it.
+      </p>
+      <ul>
+        <li>Jump sound must be immediate and recognizable.</li>
+        <li>Pickup sound should communicate reward without becoming tiring.</li>
+        <li>Damage sound should be sharper and higher priority than ambiance.</li>
+      </ul>
+
+      <h2>12. Performance and Scope Discipline</h2>
+      <ul>
+        <li>Limit animated actors per scene.</li>
+        <li>Reuse background tiles aggressively.</li>
+        <li>Keep decoration secondary to gameplay readability.</li>
+        <li>Prefer repeated enemy logic over bespoke one-off scripts.</li>
+        <li>Split long levels into scenes instead of forcing one giant map.</li>
+      </ul>
+
+      <h2>13. Exporting the Game for the Web</h2>
+      <ol>
+        <li>In GB Studio, use <code>Export Web</code>.</li>
+        <li>Find the generated files in <code>build/web</code>.</li>
+        <li>Verify the exported folder contains an <code>index.html</code> entry file and assets.</li>
+        <li>Test locally in a browser before deployment.</li>
+      </ol>
+      <p>
+        Official docs state that the web build is a static HTML5 export, so deployment is just
+        static file hosting. Mobile browsers get touch controls automatically in the exported build.
+      </p>
+
+      <h2>14. Serving the Game on gb.spqw.net</h2>
+      <p>
+        Your current <code>gb.spqw.net</code> setup is already a static nginx site, which is a good
+        fit for GB Studio web exports. The practical options are:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Option</th>
+            <th>When to use it</th>
+            <th>Shape</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Replace the site root</td>
+            <td>When the domain should become the game itself.</td>
+            <td>Copy the contents of <code>build/web</code> to the site root.</td>
+          </tr>
+          <tr>
+            <td>Host under a subpath</td>
+            <td>When you want a landing page plus the playable build.</td>
+            <td>Put the web export in <code>/play/</code> and link to it from the homepage.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Recommended deployment shape for this repo</h3>
+      <ol>
+        <li>Keep a landing page at the domain root with description, controls, and credits.</li>
+        <li>Place each playable export inside a versioned folder such as <code>/play/v1/</code>.</li>
+        <li>Point the homepage “Play” button to the latest stable export.</li>
+        <li>Commit the static files to the repo that backs the Coolify app.</li>
+        <li>Redeploy the Coolify app after each release.</li>
+      </ol>
+
+      <h3>What that means in practice</h3>
+      <p>
+        For this repo, once your GB Studio project exports to <code>build/web</code>, you would copy
+        that folder into the site repository, for example as <code>play/v1/</code>, then update
+        <code>index.html</code> to link to <code>/play/v1/</code>. Because the site is served by
+        nginx as static files, no app code changes are needed beyond placing the exported files in
+        the published directory tree.
+      </p>
+
+      <h2>15. A Sensible Development Stack Around GB Studio</h2>
+      <ul>
+        <li>GB Studio for scene editing, scripting, and export.</li>
+        <li>Aseprite for player, enemy, tile, and UI PNGs.</li>
+        <li>Tiled or another grid editor for planning backgrounds.</li>
+        <li>A git repo for the deployment site.</li>
+        <li>Coolify for pull-and-redeploy workflow on <code>gb.spqw.net</code>.</li>
+      </ul>
+
+      <h2>16. First 7-Day Build Plan</h2>
+      <ol>
+        <li>Day 1: define theme, hero, enemy shapes, tile kit, and naming.</li>
+        <li>Day 2: graybox one movement test scene and tune jump feel.</li>
+        <li>Day 3: add one enemy, pickups, death, and respawn.</li>
+        <li>Day 4: add checkpoint plus level goal, then playtest difficulty.</li>
+        <li>Day 5: swap in final art and UI.</li>
+        <li>Day 6: add music, SFX, and polish scripts.</li>
+        <li>Day 7: export web build, stage it into the site repo, deploy, and test on mobile.</li>
+      </ol>
+
+      <h2>17. Final Checklist Before You Call It Done</h2>
+      <ul>
+        <li>The hero, enemies, UI, music, and item names are original.</li>
+        <li>The player always understands where to go next.</li>
+        <li>Every pit, enemy, and jump is fair on first contact.</li>
+        <li>Checkpoint logic survives scene transitions.</li>
+        <li>The web build loads on desktop and mobile.</li>
+        <li>The landing page explains controls and links to the playable build.</li>
+      </ul>
+
+      <section class="footer">
+        <p>
+          Sources consulted: official GB Studio docs for
+          <code>Backgrounds</code>, <code>Sprites</code>, <code>Scenes</code>,
+          <code>Custom Events</code>, <code>Building Your Game</code>,
+          <code>Settings</code>, and <code>Engine Eject</code> at
+          <code>develop.gbstudio.dev</code>.
+        </p>
+        <p class="no-print">
+          Download the PDF version:
+          <a href="./gbstudio-mario-guide.pdf">gbstudio-mario-guide.pdf</a>
+        </p>
+      </section>
+    </main>
+  </body>
+</html>
